@@ -19,6 +19,8 @@ private:
 
     int m_systemOnlineState;
     int m_logOnlineState;
+    
+    long lastTransationTime;//microseconds
 public:
     void Init();
     void Loop();
@@ -35,6 +37,8 @@ void StateMachine::Init()
     m_normalTransationState = TRANSATION_FREE_STATE;
     m_logTransationState = TRANSATION_FREE_STATE;
 
+    
+    // set lastTransationTime to current
 }
 void StateMachine::Loop()
 {
@@ -51,9 +55,18 @@ void StateMachine::Loop()
     }
 
     else if(m_currentState == BUSY_STATE){
-        if(m_normalTransationState == TRANSATION_FREE_STATE && m_logTransationState == TRANSATION_FREE_STATE){
+        if(m_normalTransationState == TRANSATION_FREE_STATE && m_normalTransationState == TRANSATION_FREE_STATE){
             m_currentState = PENDING_STATE;
         }
+        else{
+            //long currentTime = fun()//get current time
+            if (currentTime - lastTransationTime >= 30*1000){
+                m_currentState = PENDING_STATE;
+                m_normalTransationState = TRANSATION_FREE_STATE;
+                m_normalTransationState = TRANSATION_FREE_STATE;
+            }
+        }
+
     }
     
     
@@ -71,6 +84,9 @@ void StateMachine::EventTransation()
     m_normalTransationState = TRANSATION_BUSY_STATE;
     m_logTransationState = TRANSATION_BUSY_STATE;
     int result = TRANSATION_OK;
+
+    //lastTransationTime = fun()//get current time
+
     //do transation now
     //...
     //... result check
